@@ -1,7 +1,6 @@
 const cityId = "288"; // Atlanta
 const cuisineId = "83"; // Seafood
-const cheapestFirst = "&sort=cost&order=asc";
-const expensiveFirst = "&sort=cost&order=desc";
+
 const headers = new Headers({
   'Content-Type': 'application/json',
   'user-key': 'd75a58b23939cfe8f16d3367916f0564'
@@ -38,18 +37,26 @@ const getRestaurantInfo = (array) => {
     const address = item.restaurant.location.address;
     const averageCost = item.restaurant.average_cost_for_two;
     const rating = parseFloat(item.restaurant.user_rating.aggregate_rating);
-    const image = item.restaurant.featured_image;
+    const image = addImage(item.restaurant.featured_image);
     newRestaurants.push({ name, address, averageCost, rating, image });
   });
 }
 
+const addImage = (image) => {
+  if (image === '') {
+    return ('./img/seafood.jpg');
+  } else {
+    return image;
+  }
+}
+
 const generateHTMLForRestaurants = (array) => {
   let restaurantHTML = "";
-  restaurantHTML += `<div class="box"><div class="name"><h3>${array.name}</h3></div>`;
-  restaurantHTML += `<div class="address"><p>${array.address}</p></div>`;
-  restaurantHTML += `<p>${array.averageCost} &#36 </p>`;
-  restaurantHTML += `<p>${array.rating} &#11088</p>`;
-  restaurantHTML += `<div class="image"><img src=${array.image}></div></div>`;
+  restaurantHTML += `<div class="box"><div class="image"><img src=${array.image} alt="Image of seafood"></div>`;
+  restaurantHTML += `<h2 class="name">${array.name}</h2>`;
+  restaurantHTML += `<p class="address">${array.address}</p>`;
+  restaurantHTML += `<div class="info"><p class="cost">Average cost for 2: ${array.averageCost} &#36 </p>`;
+  restaurantHTML += `<p class="stars">${array.rating} &#11088</p></div></div>`;
   return restaurantHTML;
 };
 
